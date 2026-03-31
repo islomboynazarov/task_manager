@@ -25,11 +25,14 @@ const statRemaining = document.querySelector("#stat-remaining")
 function addTask() {
     const text = taskInput.value.trim()
     if (!text) return
+    if (checkDuplicates(text)) return // ← stop if duplicate!
+
     const newTask = new Task(text)
     tasks.push(newTask)
     taskInput.value = ""
     renderTasks()
     updateStats()   
+    saveTasks()
 }
 
 function renderTasks() {
@@ -66,6 +69,15 @@ function renderTasks() {
         `
         taskList.appendChild(li)
     })
+}
+
+function checkDuplicates(text) {
+    const exists = tasks.some(task => task.text.toLowerCase() === text.toLowerCase())
+    if (exists) {
+        alert("This task already exists!")
+        return true  // duplicate found
+    }
+    return false     // no duplicate
 }
 
 function updateStats() {
